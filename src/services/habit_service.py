@@ -1,16 +1,23 @@
 import uuid
-from src.schemas import HabitCreate, HabitUpdate
-from src.database.repository import HabitRepository
+import logging
+
+from src.schemas.habit import HabitCreate, HabitUpdate
+from src.db.repository import HabitRepository
 from src.exceptions import HabitAlreadyExistsError, HabitNotFoundError
+
+
+logger = logging.getLogger(__name__)
 
 class HabitService:
     def __init__(self, repository: HabitRepository):
         self.repository = repository
 
     async def create_habit(self, habit_data: HabitCreate):
+        logger.info(f"Попытка создания привычки: {habit_data.title}") # <-- Пишем в лог
         existing_habit = await self.repository.get_by_title(habit_data.title)
         if existing_habit:
             # Выбрасываем чистую ошибку бизнес-логики
+            logger.warning(f"Привычка уже существует: {habit_data.title}") # <-- Пишем в лог
             raise HabitAlreadyExistsError(f"Привычка '{habit_data.title}' уже существует.")
 
         return await self.repository.create(habit_data)

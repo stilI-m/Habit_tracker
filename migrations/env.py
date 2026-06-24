@@ -8,8 +8,8 @@ from sqlalchemy.engine import Connection
 from alembic import context
 
 # === ДОБАВЛЯЕМ ЭТИ 3 СТРОКИ ===
-from src.config import get_settings
-from src.database.models import Base
+from src.core.config import get_settings
+from src.models.habit import Base
 settings = get_settings()
 # ==============================
 

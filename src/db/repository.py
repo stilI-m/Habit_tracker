@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database.models import Habit
-from src.schemas import HabitCreate, HabitUpdate
+from src.models.habit import Habit
+from src.schemas.habit import HabitCreate
 
 
 class HabitRepository:

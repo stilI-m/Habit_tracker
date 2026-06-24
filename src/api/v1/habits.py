@@ -1,9 +1,8 @@
 import uuid
 from fastapi import APIRouter, Depends, status, Response, HTTPException
-
-from src.schemas import HabitCreate, HabitResponse, HabitUpdate, PaginationParams
+from src.schemas.habit import HabitCreate, HabitResponse, HabitUpdate, PaginationParams
 from src.services.habit_service import HabitService
-from src.dependencies import get_habit_service
+from src.core.dependencies import get_habit_service
 from src.exceptions import HabitAlreadyExistsError, HabitNotFoundError
 
 router = APIRouter(prefix="/habits", tags=["Habits"])

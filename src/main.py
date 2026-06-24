@@ -1,9 +1,11 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from src.config import get_settings, Settings
-from src.database.database import engine
-from src.api.habits import router as habits_router
+from src.core.config import get_settings, Settings
+from src.db.session import engine
+from src.api.v1.habits import router as habits_router
+from src.api.health import router as health_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,12 +25,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
 
     # 2. Подключаем наши окошки (роутеры)
+    application.include_router(health_router)
     application.include_router(habits_router, prefix="/api/v1")
-
-    # 3. Эндпоинт для проверки здоровья сервера
-    @application.get("/ping")
-    async def ping():
-        return {"status": "ok", "project": cfg.project_name}
 
     return application
 
