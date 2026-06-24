@@ -15,8 +15,8 @@ class HabitService:
 
         return await self.repository.create(habit_data)
 
-    async def get_all_habits(self):
-        return await self.repository.get_all()
+    async def get_all_habits(self, offset: int = 0, limit: int = 20):
+        return await self.repository.get_all(offset=offset, limit=limit)
 
     async def update_habit(self, habit_id: uuid.UUID, update_data: HabitUpdate):
         habit = await self.repository.get_by_id(habit_id)

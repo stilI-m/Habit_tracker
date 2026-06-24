@@ -17,9 +17,9 @@ class HabitRepository:
         await self.session.commit()
         await self.session.refresh(new_habit)
         return new_habit
-    async def get_all(self) -> list[Habit]:
-        """Возвращает все привычки"""
-        query = select(Habit)
+    async def get_all(self, offset: int = 0, limit: int = 20) -> list[Habit]:
+        """Возвращает список привычек с учетом пагинации."""
+        query = select(Habit).offset(offset).limit(limit)
         result = await self.session.execute(query)
         return list(result.scalars().all())
     async def update(self, habit: Habit, update_data: dict) -> Habit:

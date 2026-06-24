@@ -1,10 +1,10 @@
 import uuid
 from fastapi import APIRouter, Depends, status, Response, HTTPException
 
-from src.schemas import HabitCreate, HabitResponse, HabitUpdate
+from src.schemas import HabitCreate, HabitResponse, HabitUpdate, PaginationParams
 from src.services.habit_service import HabitService
 from src.dependencies import get_habit_service
-from src.exceptions import HabitAlreadyExistsError, HabitNotFoundError # Импортируем наши ошибки
+from src.exceptions import HabitAlreadyExistsError, HabitNotFoundError
 
 router = APIRouter(prefix="/habits", tags=["Habits"])
 
@@ -19,8 +19,15 @@ async def create_habit(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 @router.get("/", response_model=list[HabitResponse])
-async def get_habits(service: HabitService = Depends(get_habit_service)):
-    return await service.get_all_habits()
+async def get_habits(
+    pagination: PaginationParams = Depends(), # Получаем параметры от пользователя
+    service: HabitService = Depends(get_habit_service)
+):
+    """Получить список привычек (с пагинацией)"""
+    return await service.get_all_habits(
+        offset=pagination.offset,
+        limit=pagination.limit
+    )
 
 @router.patch("/{habit_id}", response_model=HabitResponse)
 async def update_habit(

@@ -40,3 +40,8 @@ class HabitResponse(HabitBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class PaginationParams(BaseModel):
+    offset: int = Field(default=0, ge=0, description="Сколько записей пропустить")
+    # Жестко ограничиваем: отдаем не больше 100 записей за раз
+    limit: int = Field(default=20, ge=1, le=100, description="Сколько записей вернуть")
